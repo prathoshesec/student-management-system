@@ -1,0 +1,404 @@
+<!-- Author: [YOUR NAME], Reg No: [YOUR REG NO] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-wrapper">
+    <!-- Header Navigation -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="brand-section">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">Student Management System</h1>
+            <p class="brand-subtitle">Academic Records &amp; Student Information Portal</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="exportCsvBtn" class="btn btn-secondary" title="Export all student records to CSV file">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export CSV</span>
+          </button>
+
+          <button id="themeToggleBtn" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+            <span class="theme-icon dark-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </span>
+            <span class="theme-icon light-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </span>
+            <span class="theme-text" id="themeText">Dark Mode</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+      <!-- Summary Statistics Cards -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon-wrapper stat-students">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="stat-details">
+            <span class="stat-label">Total Students</span>
+            <span class="stat-value" id="totalStudentsCount">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper stat-departments">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          <div class="stat-details">
+            <span class="stat-label">Active Departments</span>
+            <span class="stat-value" id="activeDepartmentsCount">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrapper stat-cgpa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="stat-details">
+            <span class="stat-label">Average CGPA</span>
+            <span class="stat-value" id="averageCgpaValue">0.00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Layout: Form and Table -->
+      <div class="content-layout">
+        <!-- Form Section -->
+        <aside class="form-panel">
+          <div class="card form-card">
+            <div class="card-header">
+              <h2 id="formHeading" class="card-title">Add New Student</h2>
+              <p class="card-subtitle">Fill in the student academic and personal credentials</p>
+            </div>
+            
+            <form id="studentForm" novalidate autocomplete="off">
+              <input type="hidden" id="studentId" value="">
+
+              <!-- Roll Number -->
+              <div class="form-group">
+                <label for="rollNo" class="form-label">
+                  Roll Number <span class="required-star">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="rollNo" 
+                  class="form-control" 
+                  placeholder="e.g. CS-2024-001" 
+                  maxlength="20"
+                >
+                <div class="error-message" id="rollNoError"></div>
+              </div>
+
+              <!-- Full Name -->
+              <div class="form-group">
+                <label for="fullName" class="form-label">
+                  Full Name <span class="required-star">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  class="form-control" 
+                  placeholder="e.g. Aarav Sharma" 
+                  maxlength="60"
+                >
+                <div class="error-message" id="fullNameError"></div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label for="email" class="form-label">
+                  Email Address <span class="required-star">*</span>
+                </label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  class="form-control" 
+                  placeholder="e.g. student@example.com" 
+                  maxlength="80"
+                >
+                <div class="error-message" id="emailError"></div>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label for="phone" class="form-label">
+                  Phone Number (10 Digits) <span class="required-star">*</span>
+                </label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  class="form-control" 
+                  placeholder="e.g. 9876543210" 
+                  maxlength="10"
+                >
+                <div class="error-message" id="phoneError"></div>
+              </div>
+
+              <!-- Department Selection -->
+              <div class="form-group">
+                <label for="department" class="form-label">
+                  Department <span class="required-star">*</span>
+                </label>
+                <select id="department" class="form-control form-select">
+                  <option value="" disabled selected>-- Select Department --</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Electronics & Communication">Electronics & Communication</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div class="error-message" id="departmentError"></div>
+              </div>
+
+              <!-- Custom Department Field (Conditional) -->
+              <div class="form-group custom-dept-container" id="customDeptGroup" style="display: none;">
+                <label for="customDeptName" class="form-label">
+                  Enter Department Name <span class="required-star">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="customDeptName" 
+                  class="form-control" 
+                  placeholder="e.g. Data Science, Chemical Engineering" 
+                  maxlength="50"
+                >
+                <div class="error-message" id="customDeptError"></div>
+              </div>
+
+              <!-- Row: CGPA and Admission Date -->
+              <div class="form-row-grid">
+                <!-- CGPA -->
+                <div class="form-group">
+                  <label for="cgpa" class="form-label">
+                    CGPA (0 - 10) <span class="required-star">*</span>
+                  </label>
+                  <input 
+                    type="number" 
+                    id="cgpa" 
+                    class="form-control" 
+                    placeholder="e.g. 8.75" 
+                    min="0" 
+                    max="10" 
+                    step="0.01"
+                  >
+                  <div class="error-message" id="cgpaError"></div>
+                </div>
+
+                <!-- Admission Date -->
+                <div class="form-group">
+                  <label for="admissionDate" class="form-label">
+                    Admission Date <span class="required-star">*</span>
+                  </label>
+                  <input 
+                    type="date" 
+                    id="admissionDate" 
+                    class="form-control"
+                  >
+                  <div class="error-message" id="admissionDateError"></div>
+                </div>
+              </div>
+
+              <!-- Form Buttons -->
+              <div class="form-actions">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-block">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                  </svg>
+                  <span id="submitBtnText">Add Student</span>
+                </button>
+
+                <div class="secondary-actions">
+                  <button type="button" id="cancelBtn" class="btn btn-secondary" style="display: none;">
+                    Cancel
+                  </button>
+                  <button type="button" id="resetBtn" class="btn btn-outline">
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </aside>
+
+        <!-- Records Table Section -->
+        <section class="table-panel">
+          <div class="card table-card">
+            <div class="table-toolbar">
+              <div class="toolbar-title-group">
+                <h2 class="card-title">Enrolled Students</h2>
+                <span class="badge badge-info" id="recordsBadge">6 Records</span>
+              </div>
+
+              <div class="toolbar-filters">
+                <!-- Search Box -->
+                <div class="search-box">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="form-control search-input" 
+                    placeholder="Search by name, roll no, or email..."
+                  >
+                  <button type="button" id="clearSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">&times;</button>
+                </div>
+
+                <!-- Department Filter Dropdown -->
+                <div class="filter-dropdown-wrapper">
+                  <select id="deptFilterSelect" class="form-control form-select filter-select">
+                    <option value="">All Departments</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Responsive Table Container -->
+            <div class="table-responsive">
+              <table class="students-table" id="studentsTable">
+                <thead>
+                  <tr>
+                    <th class="sortable-th" data-sort="rollNo" id="thRollNo">
+                      <div class="th-content">
+                        <span>Roll No</span>
+                        <span class="sort-indicator" id="indicator-rollNo">&#8597;</span>
+                      </div>
+                    </th>
+                    <th class="sortable-th" data-sort="name" id="thName">
+                      <div class="th-content">
+                        <span>Name</span>
+                        <span class="sort-indicator" id="indicator-name">&#8597;</span>
+                      </div>
+                    </th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th class="sortable-th" data-sort="department" id="thDept">
+                      <div class="th-content">
+                        <span>Department</span>
+                        <span class="sort-indicator" id="indicator-department">&#8597;</span>
+                      </div>
+                    </th>
+                    <th class="sortable-th" data-sort="cgpa" id="thCgpa">
+                      <div class="th-content">
+                        <span>CGPA</span>
+                        <span class="sort-indicator" id="indicator-cgpa">&#8597;</span>
+                      </div>
+                    </th>
+                    <th>Admission Date</th>
+                    <th class="actions-th">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                  <!-- Rows injected via script.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table Footer / Pagination -->
+            <div class="table-footer">
+              <div class="pagination-info" id="paginationInfo">
+                Showing 0 to 0 of 0 entries
+              </div>
+              <div class="pagination-controls" id="paginationControls">
+                <button type="button" id="prevPageBtn" class="pagination-btn" disabled>
+                  &larr; Prev
+                </button>
+                <div class="page-numbers" id="pageNumbersContainer">
+                  <!-- Page numbers injected via script.js -->
+                </div>
+                <button type="button" id="nextPageBtn" class="pagination-btn" disabled>
+                  Next &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 Student Management System | Developed by PRATHOSH | AI&amp;DS, ERODE SENGUNTHAR ENGINEERING COLLEGE</p>
+    </footer>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="deleteModal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div class="modal-header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <h3 id="modalTitle" class="modal-title">Confirm Deletion</h3>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the student record for <strong id="deleteStudentName"></strong> (Roll No: <span id="deleteStudentRoll"></span>)?</p>
+        <p class="modal-subtext">This action will remove the record permanently from persistent storage.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Application Script -->
+  <script src="script.js"></script>
+</body>
+</html>
